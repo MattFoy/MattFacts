@@ -30,6 +30,17 @@ function sendSMS(targetId, messageBody) {
 	});
 }
 
+// Thanks https://stackoverflow.com/questions/1349404/generate-random-string-characters-in-javascript
+function makeid(length) {
+   var result           = '';
+   var characters       = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+   var charactersLength = characters.length;
+   for ( var i = 0; i < length; i++ ) {
+      result += characters.charAt(Math.floor(Math.random() * charactersLength));
+   }
+   return result;
+}
+
 ;(function() {
 	data.initializeDatabase(function() {
 		for (let i = 0; i < mattFacts.targets.length; i++) {
@@ -42,7 +53,7 @@ function sendSMS(targetId, messageBody) {
 						data.getTargetByNumber(target.number, function(dbTarget) {
 							sendSMS(dbTarget.id, 'Thanks for signing up for MattFacts™! You will now receive fun, hourly MattFacts™.\n\n'
 								+ getFact()
-								+'\n<To unsubscribe, reply "STOP">');
+								+'\n<To unsubscribe, reply "Unsubscribe ' + makeid(8) + '">');
 						});
 					}, 200);
 				} else {
@@ -60,8 +71,13 @@ function sendSMS(targetId, messageBody) {
 
 		data.getTargetByNumber(req.body.From, function(dbTarget) {
 			data.saveReceivedMessage(dbTarget, req.body.Body, req.body.MessageSid);
-
-			let message = 'Thanks for your active interest in MattFacts™.\n' + getFact() + '\n<To unsubscribe, reply "STOP">';
+			
+			let message;
+			if (req.body.Body.indexOf('Unsubscribe') === 0) {
+				message = '<Unrecognized command>\n' + getFact() + '\n<To unsubscribe, reply "Unsubscribe ' + makeid(8) + '">';
+			} else {
+				message = 'Thanks for your active interest in MattFacts™.\n' + getFact() + '\n<To unsubscribe, reply "Unsubscribe ' + makeid(8) + '">';
+			}
 
 			twiml.message(message);
 			res.writeHead(200, {'Content-Type': 'text/xml'});
@@ -85,7 +101,7 @@ function sendSMS(targetId, messageBody) {
 						if (((new Date()).getTime()) - d > 1000 * 60 * 5) {
 							console.log("It's been more than 5 minutes since we sent him a text...");
 
-							sendSMS(dbTarget.id, getFact() + "\n<To unsubscribe reply \"STOP\">");
+							sendSMS(dbTarget.id, getFact() + "\n<To unsubscribe reply \"Unsubscribe + " + makeid(8) + "\">");
 						}
 					});
 				}
