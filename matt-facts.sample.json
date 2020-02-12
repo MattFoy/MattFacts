@@ -1,4 +1,20 @@
 {
+	// Create your own matt-facts.json file using the following format.
+	// Remember to remove all comments in the real file.
+
+	// Your Account SID from www.twilio.com/console
+	"accountSid": "ACXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX",	
+	// Your Auth Token from www.twilio.com/console
+	"authToken": "your_auth_token",
+	// Your Twilio phone number
+	"twilioNumber": "+11234567890", 
+
+	// Your list of targets!
+	"targets": [
+		{ "name": "Matt", "number": "+11234567890" }
+	],
+
+	// Your MattFacts™
 	"facts": [
 		"Sample MattFact™ #1",
 		"Sample MattFact™ #2"
