@@ -2,12 +2,18 @@
 	// Create your own matt-facts.json file using the following format.
 	// Remember to remove all comments in the real file.
 
-	// Your Account SID from www.twilio.com/console
+	// Your Account SID from https://www.twilio.com/console
 	"accountSid": "ACXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX",	
-	// Your Auth Token from www.twilio.com/console
+	// Your Auth Token from https://www.twilio.com/console
 	"authToken": "your_auth_token",
 	// Your Twilio phone number
-	"twilioNumber": "+11234567890", 
+	"twilioNumber": "+11234567890",
+
+	// The SID of your SMS Messaging Service from https://www.twilio.com/console/sms/services
+	"messagingServiceSid": "MGXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX",
+
+	// Send MattFacts every <messageInteral> minutes
+	"messageInterval": 15,
 
 	// Your list of targets!
 	"targets": [
