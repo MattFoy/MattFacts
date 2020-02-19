@@ -28,7 +28,7 @@ function initializeDatabase(then) {
 
 	closeDb(db);
 
-	if (then && typeof then === 'function') { setTimeout(then, 50); }
+	if (then && typeof then === 'function') { setTimeout(then, 500); }
 }
 
 function addTarget(name, number) {

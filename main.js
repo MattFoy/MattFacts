@@ -17,6 +17,11 @@ const data = require('./database.js');
 	ngrok.stderr.on("data", data => { console.log(`ngrok - stderr: ${data}`);	});
 	ngrok.on('error', (error) => { console.log(`ngrok - error: ${error.message}`); });
 	ngrok.on("close", code => { console.log(`ngrok - child process exited with code ${code}`); });
+	process.on('exit', function(code) {
+    console.log("Killing child process");
+    ngrok.kill();
+    console.log("Main process exited with code", code);
+  });
 
 	setTimeout(function() {
 		// Ask the ngrok local API for the endpoint it created
@@ -94,7 +99,7 @@ function makeid(length) {
 						data.addTarget(target.name, target.number);
 						setTimeout(function() {
 							data.getTargetByNumber(target.number, function(dbTarget) {
-								sendSMS(dbTarget.id, 'Hi ' + target.name + ', thanks for signing up to MattFacts™! You will now receive fun, periodic MattFacts™. Your subscription will expire on 2021/03/31. To learn more, visit https://matthewfoy.ca/mattfacts');
+								sendSMS(dbTarget.id, 'Hi ' + target.name + ', thanks for subscribing to MattFacts™! You will now receive fun, periodic MattFacts™. Your subscription will expire on 2021/03/31. To learn more, visit https://matthewfoy.ca/mattfacts');
 								setTimeout(function() {
 									sendSMS(dbTarget.id, getFact() + getFooter());
 								}, 2000);
@@ -112,14 +117,16 @@ function makeid(length) {
 	app.use(urlencoded({ extended: false }));
 
 	app.post('/sms', (req, res) => {
+		let twiml = new MessagingResponse();
+
 		data.getTargetByNumber(req.body.From, function(dbTarget) {
 			data.saveReceivedMessage(dbTarget, req.body.Body, req.body.MessageSid);
 			
-			let message;
+			let message = "";
 			if (req.body.Body.indexOf('Matt_') === 0) {
-				message = '<Unrecognized command>\n' + getFact();
+				message = '<Unrecognized command>\n';
 			}
-			let twiml = new MessagingResponse();
+			message += getFact();
 			twiml.message(message);
 			res.writeHead(200, {'Content-Type': 'text/xml'});
 			res.end(twiml.toString());
