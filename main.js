@@ -97,22 +97,24 @@ function makeid(length) {
 				data.getTargetByNumber(target.number, function(dbTarget) {
 					if (!dbTarget) {
 						data.addTarget(target.name, target.number);
+					} else {
+						//console.log("Target already added. ID: " + dbTarget.id);
 						setTimeout(function() {
 							data.getTargetByNumber(target.number, function(dbTarget) {
-								sendSMS(dbTarget.id, 'Hi ' + target.name + ', thanks for subscribing to MattFacts™! You will now receive fun, periodic MattFacts™. Your subscription will expire on 2021/03/31. To learn more, visit https://matthewfoy.ca/mattfacts');
+								//sendSMS(dbTarget.id, 'Hi ' + target.name + ', thanks for subscribing to MattFacts™! You will now receive fun, periodic MattFacts™. Your premium subscription will expire on 2021/03/31. To learn more, visit https://matthewfoy.ca/mattfacts');
+								sendSMS(dbTarget.id, "Happy April fools' day!");
 								setTimeout(function() {
 									sendSMS(dbTarget.id, getFact() + getFooter());
 								}, 2000);
 							});
 						}, 200);
-					} else {
-						console.log("Target already added. ID: " + dbTarget.id);
 					}
 				});
 			}(mattFacts.targets[i]));
 		}
 	});
 
+	/*
 	const app = express();
 	app.use(urlencoded({ extended: false }));
 
@@ -137,6 +139,7 @@ function makeid(length) {
 	http.createServer(app).listen(1337, () => {
 		console.log('Express server listening on port 1337');
 	});
+	*/
 }());
 
 function mainLoop() {

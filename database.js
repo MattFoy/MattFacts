@@ -1,14 +1,16 @@
 const sqlite3 = require('sqlite3').verbose();
 
 const dbPath = './db/data.db';
+const db = new sqlite3.Database(dbPath);
 
 function getDb() {
-	let db = new sqlite3.Database(dbPath);
 	//console.log('Opened database connection.');
 	return db;
 }
 
 function closeDb(db) {
+	return;
+
 	db.close((err) => {
 		if (err) {
 			console.error(err.message);
@@ -117,6 +119,8 @@ function whenWasLastSentMessage(target, then) {
 		if (err) {
 			throw err;
 		}
+
+		if(rows.length == 0) return 0;
 		
 		let latestDate = rows[0].timestamp;
 
